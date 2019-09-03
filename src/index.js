@@ -13,10 +13,18 @@ import {
 import "semantic-ui-css/semantic.min.css";
 import firebase from "./firebase";
 
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
+import {composeWithDevtools} from 'redux-devtools-extension';
+
+const store = createStore(()=>{}, composeWithDevtools());
+
 class Root extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
+        // console.log(user);
+        // setUser(user);
         this.props.history.push("/");
       }
     });
@@ -34,9 +42,11 @@ class Root extends React.Component {
 
 const RootWithAuth = withRouter(Root);
 ReactDOM.render(
-  <Router>
-    <RootWithAuth />
-  </Router>,
+  <Provider store ={store}>
+    <Router>
+     <RootWithAuth/>
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );
 registerServiceWorker();
